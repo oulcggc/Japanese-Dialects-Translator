@@ -6,7 +6,7 @@ This software includes kuromoji.js which is distributed under the Apache License
   [Apache License 2.0](kuromoji/LICENSE-2.0.txt)
   [NOTICE FILE](kuromoji/NOTICE.md)
 
-[ClickToStartTheSoftware](transDialects.html)
+[ClickToStartTheSoftware](./transDialects.html)
 
 このソフトウェアは、標準日本語をほかの方言に変換する、別のソフトウェアを制作するのを補助するツールです。
 
@@ -16,4 +16,4 @@ This software includes kuromoji.js which is distributed under the Apache License
   [Apache License 2.0](kuromoji/LICENSE-2.0.txt)
   [NOTICEファイル](kuromoji/NOTICE.md)
 
-[ここから入場](transDialects.html)
+[ここから入場](./transDialects.html)
