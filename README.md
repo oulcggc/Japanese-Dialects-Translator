@@ -7,6 +7,7 @@ This software includes kuromoji.js which is distributed under the Apache License
   [NOTICE FILE](kuromoji/NOTICE.md)
 
 [ClickToStartTheSoftware](./transDialects.html)
+[Wakayama dirarect Sample](Rwakayaman-simple-shin3-2.html)
 
 このソフトウェアは、標準日本語をほかの方言に変換する、別のソフトウェアを制作するのを補助するツールです。
 
@@ -17,3 +18,5 @@ This software includes kuromoji.js which is distributed under the Apache License
   [NOTICEファイル](kuromoji/NOTICE.md)
 
 [ここから入場](./transDialects.html)
+
+[和歌山弁サンプル](Rwakayaman-simple-shin3-2.html)
