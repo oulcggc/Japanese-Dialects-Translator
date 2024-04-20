@@ -2,10 +2,12 @@
 <charset="UTF-8">
 <html lang="ja">
     <head>
-        <script src="kuromoji.js"></script>
+        <title>和歌山弁変換</title>
+        <p>このソフトウェアは、 Apache 2.0ライセンスで配布されている<a href="https://github.com/takuyaa/kuromoji.js/">kuromoji.js</a>が含まれています。
+        </p>
+        <script src="kuromoji/build/kuromoji.js"></script>
         <script>
-            var transdatas={//"surface_form"→標準語 "translatedSurface_form"→和歌山弁。surface_formの文字列を発見したら、和歌山弁に変換。
-            //その他"pos"で品詞を指定可能。mae---とか、ato---というやつは、前の語やあとの語を見て、その変換を行うか決定する。
+            var transdatas={
                 "和歌山弁" : [
                     {"surface_form":"サンダル","translatedSurface_form":"せった"},
                     {"surface_form":"サンダル","translatedSurface_form":"水せった","maeSurface_form":"ビーチ","note":"delete 3"},
@@ -585,7 +587,7 @@
             
             let kuromojiObj;
 
-            kuromoji.builder({dicPath : './dict/'}).build(function(error, _tokenizer) {
+            kuromoji.builder({dicPath : './kuromoji/dict/'}).build(function(error, _tokenizer) {
                 if(error != null){console.log(error);}
                 kuromojiObj = _tokenizer;
             });
