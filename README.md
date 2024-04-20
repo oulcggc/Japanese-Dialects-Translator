@@ -11,6 +11,6 @@ This software includes kuromoji.js which is distributed under the Apache License
 このソフトウェアは、Apache License 2.0で配布されている、kuromoji.jsを含んでいます。
 
   https://github.com/takuyaa/kuromoji.js
-  Apache License 2.0 ./kuromoji/LICENSE-2.0.txt
-  NOTICEファイル ./kuromoji/NOTICE.md
+  Apache License 2.0 (./kuromoji/LICENSE-2.0.txt)
+  NOTICEファイル (./kuromoji/NOTICE.md)
 
