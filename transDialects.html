@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>和歌山弁変換</title>
+    <p>このソフトウェアは、 Apache 2.0ライセンスで配布されている<a href="https://github.com/takuyaa/kuromoji.js/">kuromoji.js</a>が含まれています。
+    </p>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+    
+        .form-group {
+            margin-bottom: 20px;
+        }
+    
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+    
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+    
+        .form-group button {
+            padding: 8px 15px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+    
+        #add-form-btn {
+            margin-bottom: 10px;
+        }
+    
+        #form-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+    
+</head>
+<body>
+    <button id="add-form-btn">フォームを追加</button>
+    <button id="generate-json-btn">決定</button>
+    <input type="file" id="file-input" accept=".json">
+    <button id="load-json-btn">JSONファイルを読み込む</button>
+    <button id="download">ダウンロード</button>
+
+    <div id="form-container"></div>
+
+    <textarea id="txt"></textarea>
+    
+    <button onclick="toWA(document.getElementById('txt').value)">変換</button>
+    <p id="text">ここに表示</p>
+
+    <script src="kuromoji.js"></script>
+    <script>
+        var transdata = [];
+        var jsonData = [];
+
+        let formCount = 0;
+
+        function addForm() {
+            const formContainer = document.getElementById('form-container');
+            const formGroup = document.createElement('div');
+            formGroup.classList.add('form-group');
+
+            const fields = [
+                "surface_form",
+                "translatedSurface_form",
+                "pos",
+                "conjugated_form",
+                "maeSurface_form",
+                "maePos",
+                "atoSurface_form",
+                "atoPos",
+                "note"
+            ];
+
+            fields.forEach(field => {
+                const label = document.createElement('label');
+                label.textContent = field + ": ";
+                formGroup.appendChild(label);
+
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = field;
+                formGroup.appendChild(input);
+            });
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = '削除';
+            deleteBtn.addEventListener('click', () => {
+                formContainer.removeChild(formGroup);
+                formCount--;
+            });
+            formGroup.appendChild(deleteBtn);
+
+            formContainer.appendChild(formGroup);
+            formCount++;
+        }
+
+        function generateJSON() {
+            const forms = document.querySelectorAll('.form-group');
+            const formData = [];
+
+            forms.forEach(form => {
+                const inputs = form.querySelectorAll('input');
+                const formObj = {};
+                inputs.forEach(input => {
+                    const fieldName = input.placeholder;
+                    const value = input.value.trim(); // 前後の空白をトリム
+                    if (value !== "") { // 入力がある場合のみJSONに追加
+                        formObj[fieldName] = value;
+                    }
+                });
+                if (Object.keys(formObj).length !== 0) { // フォームが空でない場合のみformDataに追加
+                    formData.push(formObj);
+                }
+            });
+
+            transdata = formData;
+            jsonData = JSON.stringify(formData, null, 2);
+        }
+
+        function flashDownload() {
+            download(jsonData, 'formData.json', 'application/json');
+        }
+
+        function download(content, fileName, contentType) {
+            const a = document.createElement('a');
+            const file = new Blob([content], {type: contentType});
+
+            a.href = URL.createObjectURL(file);
+            a.download = fileName;
+            a.click();
+
+            URL.revokeObjectURL(a.href);
+        }
+
+        function createFormFromJSON(jsonData) {
+            const formContainer = document.getElementById('form-container');
+            formContainer.innerHTML = ''; // 既存のフォームをクリア
+
+            const fields = [
+                "surface_form",
+                "translatedSurface_form",
+                "pos",
+                "conjugated_form",
+                "maeSurface_form",
+                "maePos",
+                "atoSurface_form",
+                "atoPos",
+                "note"
+            ];
+
+            jsonData.forEach(data => {
+                const formGroup = document.createElement('div');
+                formGroup.classList.add('form-group');
+
+                fields.forEach(field => {
+                    const label = document.createElement('label');
+                    label.textContent = field + ": ";
+                    formGroup.appendChild(label);
+
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.placeholder = field;
+                    input.value = data[field] || ''; // nullの場合は空文字列を設定
+                    formGroup.appendChild(input);
+                });
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = '削除';
+                deleteBtn.addEventListener('click', () => {
+                    formContainer.removeChild(formGroup);
+                    formCount--;
+                });
+                formGroup.appendChild(deleteBtn);
+
+                formContainer.appendChild(formGroup);
+                formCount++;
+            });
+        }
+
+        // JSONファイルを読み込む処理
+        document.getElementById('load-json-btn').addEventListener('click', function() {
+            const fileInput = document.getElementById('file-input');
+            fileInput.click();
+        });
+
+        document.getElementById('file-input').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const jsonData = JSON.parse(e.target.result);
+                createFormFromJSON(jsonData);
+            };
+
+            reader.readAsText(file);
+        });
+
+        document.getElementById('add-form-btn').addEventListener('click', addForm);
+        document.getElementById('generate-json-btn').addEventListener('click', generateJSON);
+        document.getElementById('download').addEventListener('click', flashDownload);
+
+        let kuromojiObj;
+
+        kuromoji.builder({dicPath: './dict/'}).build(function(error, _tokenizer) {
+            if (error != null) {
+                console.log(error);
+            }
+            kuromojiObj = _tokenizer;
+        });
+
+        function toWA(standardLanguage) {
+            
+
+            let getKuromojiObj = function() {
+                return kuromojiObj;
+            };
+
+            function trans(str) {
+                let tokenizer = getKuromojiObj();
+                path = tokenizer.tokenize(str);
+                console.log(path);
+                return path;
+            }
+            function toWAOneWordTrans(maedata, nowdata, atodata, sentence) {
+                var gosign = 0;
+                var checkSousuu = 4;
+                var resultData = nowdata["surface_form"];
+                var note = "";
+                var resultNumber = -1
+                // resultData = nowdata["surface_form"];
+                for (var i = 0; i < transdata.length; i++) {
+                    // alert("kita")
+                    var gosign = 0;
+                    if (nowdata["surface_form"] == transdata[i]["surface_form"]) {
+                        gosign = 1;
+                        if (typeof transdata[i]["maeSurface_form"] == 'string') {
+                            if (transdata[i]["maeSurface_form"] == maedata["surface_form"]) {
+                                // gosign += 1;
+                            } else {
+                                gosign = 0;
+                            }
+                        }
+                        if (typeof transdata[i]["atoSurface_form"] == 'string') {
+                            if (transdata[i]["atoSurface_form"] == atodata["surface_form"]) {
+                                // gosign += 1;
+                            } else {
+                                gosign = 0;
+                            }
+                        }
+                        if (typeof transdata[i]["pos"] == 'string') {
+                            if (transdata[i]["pos"] == nowdata["pos"]) {
+                                // gosign += 1;
+                            } else {
+                                gosign = 0;
+                            }
+                        }
+                        if (typeof transdata[i]["maePos"] == 'string') {
+                            if (transdata[i]["maePos"] == maedata["pos"]) {
+                                // gosign += 1;
+                            } else {
+                                gosign = 0;
+                            }
+                        }
+                        if (typeof transdata[i]["atoPos"] == 'string') {
+                            if (transdata[i]["atoPos"] == atodata["pos"]) {
+                                // gosign += 1;
+                            } else {
+                                gosign = 0;
+                            }
+                        }
+                        if (typeof transdata[i]["conjugated_form"] == 'string') {
+                            if (transdata[i]["conjugated_form"] == nowdata["conjugated_form"]) {
+
+                            } else {
+                                gosign = 0;
+                            }
+                        }
+                        if (typeof transdata[i]["last_sentence"] == 'string') {
+                            if (transdata[i]["last_sentence"] == sentence.slice(-1)) {
+                            } else {
+                                gosign = 0;
+                            }
+                        }
+                        if (typeof transdata[i]["reading"] == 'string') {
+                            if (transdata[i]["reading"] == maedata["reading"].slice(-1)) {
+                            } else {
+                                gosign = 0;
+                            }
+                        }
+                    }
+                    if (gosign == 1) {
+                        resultNumber = i;
+                    }
+                }
+                if (resultNumber != -1) {
+                    i = resultNumber;
+                    if (typeof transdata[i]["note"] == "string") {
+                        note = transdata[i]["note"];
+                    }
+                    resultData = "";
+                    if (note.slice(0, 6) == "delete") {
+                        deleteSuu = note.slice(-1);
+                        sentence = sentence.slice(0, deleteSuu * (-1));
+
+                    }
+                    resultData += transdata[i]["translatedSurface_form"];
+                }
+                sentence = sentence + resultData;
+                return sentence;
+            }
+
+            var data = trans(standardLanguage);
+            var FinalResult = "";
+            for (var i = 0; i < data.length; i++) {
+                var maedata = { "surface_form": "", "pos": "", "conjugated_form": "", "reading": "" };
+                var nowdata = { "surface_form": "", "pos": "", "conjugated_form": "", "reading": "" };
+                var atodata = { "surface_form": "", "pos": "", "conjugated_form": "", "reading": "" };
+                if (i > 0) { maedata = data[i - 1]; }
+                nowdata = data[i];
+                if (i + 1 < data.length) { atodata = data[i + 1]; }
+                FinalResult = toWAOneWordTrans(maedata, nowdata, atodata, FinalResult);
+            }
+            document.getElementById("text").innerHTML = FinalResult;
+            return FinalResult;
+        }
+    </script>
+</body>
+</html>
