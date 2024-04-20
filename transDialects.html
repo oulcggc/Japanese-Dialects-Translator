@@ -68,7 +68,7 @@
     <button onclick="toWA(document.getElementById('txt').value)">変換</button>
     <p id="text">ここに表示</p>
 
-    <script src="kuromoji.js"></script>
+    <script src="./kuromoji/build/kuromoji.js"></script>
     <script>
         var transdata = [];
         var jsonData = [];
@@ -222,7 +222,7 @@
 
         let kuromojiObj;
 
-        kuromoji.builder({dicPath: './dict/'}).build(function(error, _tokenizer) {
+        kuromoji.builder({dicPath: './kuromoji/dict/'}).build(function(error, _tokenizer) {
             if (error != null) {
                 console.log(error);
             }
