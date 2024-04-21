@@ -623,7 +623,7 @@
                 const recognition = new SpeechRecognition();
             
                 recognition.onresult = (event) => {
-                    alert(event.results[0][0].transcript);
+                    //alert(event.results[0][0].transcript);
                     translated = toWA(event.results[0][0].transcript,document.getElementById('dialects').value);
                     speakText(translated);
 
@@ -634,7 +634,7 @@
                 recognition.start();
             }
             function speakText(text) {
-                alert("Speak");
+                //alert("Speak");
                 var text = document.getElementById("text-to-read").value;
                 
                 // SpeechSynthesis オブジェクトのインスタンスを作成
@@ -780,6 +780,7 @@
         </script>
     </head>
     <body>
+        <p>「方言くん」と声をかけてみよう！</p>
         <textarea id = "txt"></textarea>
         <select id ="dialects">
             <option value = "和歌山弁">和歌山弁</option>
