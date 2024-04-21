@@ -597,6 +597,7 @@
             });
 
             function talkto(){
+                status = "run"
                 SpeechRecognition = webkitSpeechRecognition || SpeechRecognition;
                 const recognition = new SpeechRecognition();
             
@@ -605,7 +606,6 @@
                 const speechResult = event.results[0][0].transcript
                 if(speechResult.includes("方言くん")){
                     startRecognition()
-
                 }
             }
 
@@ -636,6 +636,7 @@
                 
                 // 読み上げる
                 speechSynthesis.speak(utterance);
+                status = "pose"
             }
 
 
@@ -757,8 +758,11 @@
                 return FinalResult
             }
         
+            var status = "pose"
             while(True){
-                talkTo()
+                if(status == "pose"){
+                    talkTo()
+                }
             }
         </script>
     </head>
