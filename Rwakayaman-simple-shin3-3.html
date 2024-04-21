@@ -10,6 +10,14 @@
         <br>
         <script src="kuromoji/build/kuromoji.js"></script>
         <script>
+            function sleep(waitMsec) {
+                var startMsec = new Date();
+
+                // 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
+                while (new Date() - startMsec < waitMsec);
+            }
+
+
             var transdatas={
                 "和歌山弁" : [
                     {"surface_form":"サンダル","translatedSurface_form":"せった"},
