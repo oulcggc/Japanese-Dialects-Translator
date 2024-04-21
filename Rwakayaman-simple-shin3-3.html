@@ -604,7 +604,7 @@
                 recognition.onresult = (event) => {
                     //alert(event.results[0][0].transcript);
                     const speechResult = event.results[0][0].transcript
-                    if(speechResult.includes("方言") && speechResults.includes("くん")){
+                    if(speechResult.includes("方言") && speechResult.includes("くん")){
                         startRecognition()
                     }else{
                         status = "pose"
