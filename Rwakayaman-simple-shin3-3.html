@@ -762,11 +762,8 @@
             var status = "pose"
 
             function intervalRunned(){
-                while(true){
-
-                    if(status == "pose"){
-                        talkto()
-                    }
+                if(status == "pose"){
+                    talkto()
                 }
             }
             setInterval(intervalRunned, 3000);
