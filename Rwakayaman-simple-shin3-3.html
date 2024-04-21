@@ -605,7 +605,7 @@
                     //alert(event.results[0][0].transcript);
                     const speechResult = event.results[0][0].transcript
                     alert(speechResult);
-                    if(speechResult=="方言 くん"){
+                    if(speechResult.includes("方言") && speechResults.includes("くん")){
                         startRecognition()
                     }
                 }
