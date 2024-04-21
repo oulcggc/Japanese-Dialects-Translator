@@ -607,6 +607,7 @@
                     if(speechResult.includes("方言") && speechResult.includes("くん")){
                         
                         speakText("こんにちは。私は和歌山弁を喋るで。")
+                        sleep(5000)
                         startRecognition()
                     }else{
                         status = "pose"
