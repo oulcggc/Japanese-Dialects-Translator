@@ -605,6 +605,7 @@
                     //alert(event.results[0][0].transcript);
                     const speechResult = event.results[0][0].transcript
                     if(speechResult.includes("方言") && speechResult.includes("くん")){
+                        SpeakText("こんにちは。私は和歌山弁を喋るで。")
                         startRecognition()
                     }else{
                         status = "pose"
